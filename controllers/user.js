@@ -14,9 +14,7 @@ exports.addUser = async ctx => {
       ctx.status = httpStatusCodes.CREATED;
     }
   } catch (err) {
-    console.log(ctx.status, ctx.message);
     ctx.status = httpStatusCodes.FORBIDDEN;
     ctx.message = 'user already exists';
-    console.log(ctx.status, ctx.message);
   }
 };
