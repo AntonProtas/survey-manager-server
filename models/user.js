@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema(
   {
     username: {
       required: true,
-      type: String,
+      type: String
     },
     email: {
       required: true,
@@ -34,5 +34,9 @@ UserSchema.pre('save', function(next) {
     });
   });
 });
+
+UserSchema.methods.comparePasswords = function(password) {
+  return bcrypt.compareSync(password, this.password);
+};
 
 module.exports = mongoose.model('User', UserSchema);

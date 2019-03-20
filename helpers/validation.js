@@ -15,6 +15,17 @@ exports.validationSchemaUser = {
     .trim()
 };
 
+exports.validationSchemaAuthUser = {
+  email: Joi.string()
+    .email()
+    .required(),
+  password: Joi.string()
+    .min(6)
+    .regex(/^(?=(.*\d){2,})/)
+    .regex(/^(?=.*[A-Z]{1,})/)
+    .trim()
+};
+
 exports.validation = (value, schema) => {
   return Joi.validate(value, schema);
 };
