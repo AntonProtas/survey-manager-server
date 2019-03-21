@@ -1,14 +1,26 @@
 const Koa = require('koa');
 const Router = require('koa-router');
+const { addUser } = require('./controllers/user');
+const { authUser } = require('./controllers/user');
+const { addSurvey } = require('./controllers/survey');
+const jwtMiddleware = require('koa-jwt');
 const logger = require('koa-logger');
 const mongoose = require('mongoose');
 const bodyParser = require('koa-bodyparser');
-const router = require('./routers/index');
 const cors = require('koa2-cors');
-const jwt = require('jsonwebtoken');
-
+const router = new Router();
 const app = new Koa();
 require('dotenv').config();
+
+router.post('/sign-up', addUser);
+router.post('/sign-in', authUser);
+router.post('/add-survey', addSurvey);
+
+router.use(
+  jwtMiddleware({
+    secret: process.env.SECRET
+  })
+);
 
 mongoose.set('debug', true);
 mongoose.Promise = global.Promise;
@@ -18,7 +30,6 @@ mongoose
   .catch(err => {
     console.log(err);
   });
-
 
 app.use(logger());
 app.use(bodyParser());
