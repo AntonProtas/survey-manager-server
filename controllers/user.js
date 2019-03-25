@@ -16,16 +16,21 @@ exports.addUser = async ctx => {
     } else {
       await addUser(value);
       ctx.status = httpStatusCodes.CREATED;
+      ctx.body = {
+        username: value.username,
+        email: value.email
+      };
     }
   } catch (err) {
     ctx.status = httpStatusCodes.FORBIDDEN;
-    ctx.message = "email already exists";
+    ctx.body = {
+      message: "email already exists"
+    };
   }
 };
 
 exports.authUser = async ctx => {
   try {
-    console.log(ctx.request.body);
     const { error, value } = validation(
       ctx.request.body,
       validationSchemaAuthUser
@@ -40,7 +45,7 @@ exports.authUser = async ctx => {
         ctx.body = {
           message: "Login successful",
           token: dataUser.token,
-          firstName: dataUser.firtsName,
+          username: dataUser.username,
           email: dataUser.email
         };
         ctx.status = httpStatusCodes.OK;
