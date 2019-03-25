@@ -1,11 +1,11 @@
-const httpStatusCodes = require('http-status-codes');
-const { addUser } = require('../services/user');
-const { authUser } = require('../services/user');
+const httpStatusCodes = require("http-status-codes");
+const { addUser } = require("../services/user");
+const { authUser } = require("../services/user");
 const {
   validation,
   validationSchemaUser,
   validationSchemaAuthUser
-} = require('../helpers/validation');
+} = require("../helpers/validation");
 
 exports.addUser = async ctx => {
   try {
@@ -19,12 +19,13 @@ exports.addUser = async ctx => {
     }
   } catch (err) {
     ctx.status = httpStatusCodes.FORBIDDEN;
-    ctx.message = 'email already exists';
+    ctx.message = "email already exists";
   }
 };
 
 exports.authUser = async ctx => {
   try {
+    console.log(ctx.request.body);
     const { error, value } = validation(
       ctx.request.body,
       validationSchemaAuthUser
@@ -33,21 +34,23 @@ exports.authUser = async ctx => {
       ctx.status = httpStatusCodes.BAD_REQUEST;
       ctx.body = error;
     } else {
-      const _token = await authUser(value);
+      const dataUser = await authUser(value);
 
-      if (!!_token) {
+      if (!!dataUser) {
         ctx.body = {
-          message: 'Login successful',
-          token: _token
+          message: "Login successful",
+          token: dataUser.token,
+          firstName: dataUser.firtsName,
+          email: dataUser.email
         };
         ctx.status = httpStatusCodes.OK;
       } else {
-        ctx.body = { message: 'username or pass didnt match' };
+        ctx.body = { message: "username or pass didnt match" };
         ctx.status = httpStatusCodes.UNAUTHORIZED;
       }
     }
   } catch (err) {
     ctx.status = httpStatusCodes.BAD_REQUEST;
-    ctx.message = 'validation error';
+    ctx.message = "validation error";
   }
 };

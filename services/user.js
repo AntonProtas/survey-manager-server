@@ -1,6 +1,6 @@
-const { saveUser } = require('../repositories/user');
-const { getUser } = require('../repositories/user');
-const jwt = require('jsonwebtoken');
+const { saveUser } = require("../repositories/user");
+const { getUser } = require("../repositories/user");
+const jwt = require("jsonwebtoken");
 
 exports.addUser = async data => {
   try {
@@ -13,15 +13,15 @@ exports.addUser = async data => {
 exports.authUser = async data => {
   try {
     const { password, email } = data;
-
     const user = await getUser(email);
-
     const passwordIsMatch = await user.comparePasswords(password);
 
-    console.log(passwordIsMatch);
-
     if (!!user && passwordIsMatch) {
-      return jwt.sign({ _id: user }, process.env.SECRET);
+      return {
+        token: jwt.sign({ _id: user }, process.env.SECRET),
+        firtsName: user.username,
+        email: user.email
+      };
     } else {
       return false;
     }
