@@ -6,40 +6,42 @@ const SurveySchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
     },
-    title: {
+    surveyName: {
       type: String,
       required: true
+    },
+    pages: {
+      type: Object,
+      required: true
+    },
+    setting: {
+      anonQuest: {
+        type: Boolean,
+        required: true
+      },
+      questNumb: {
+        type: Boolean,
+        required: true
+      },
+      pageNumb: {
+        type: Boolean,
+        required: true
+      },
+      randomQuests: {
+        type: Boolean,
+        required: true
+      },
+      asterisksFields: {
+        type: Boolean,
+        required: true
+      },
+      progressBar: {
+        type: Boolean,
+        required: true
+      }
     }
-
-    // ,
-    // setting: {
-    //   anonQuest: {
-    //     type: Boolean,
-    //     required: true
-    //   },
-    //   questNumb: {
-    //     type: Boolean,
-    //     required: true
-    //   },
-    //   pageNumb: {
-    //     type: Boolean,
-    //     required: true
-    //   },
-    //   randomQuests: {
-    //     type: Boolean,
-    //     required: true
-    //   },
-    //   asterisksFields: {
-    //     type: Boolean,
-    //     required: true
-    //   },
-    //   progressBar: {
-    //     type: Boolean,
-    //     required: true
-    //   }
-    // }
   },
-  { versionKey: false, strict: false }
+  { versionKey: false }
 );
 
 module.exports = mongoose.model('Survey', SurveySchema);

@@ -1,6 +1,6 @@
 const { saveSurvey } = require('../repositories/survey');
 
-exports.addSurvey = async data => {
+exports.saveSurvey = async data => {
   try {
     await saveSurvey(data);
   } catch (err) {

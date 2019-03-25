@@ -2,7 +2,7 @@ const Koa = require('koa');
 const Router = require('koa-router');
 const { addUser } = require('./controllers/user');
 const { authUser } = require('./controllers/user');
-const { addSurvey } = require('./controllers/survey');
+const { saveSurvey } = require('./controllers/survey');
 const jwtMiddleware = require('koa-jwt');
 const logger = require('koa-logger');
 const mongoose = require('mongoose');
@@ -14,7 +14,7 @@ require('dotenv').config();
 
 router.post('/sign-up', addUser);
 router.post('/sign-in', authUser);
-router.post('/add-survey', addSurvey);
+router.post('/save-survey', saveSurvey);
 
 router.use(
   jwtMiddleware({
