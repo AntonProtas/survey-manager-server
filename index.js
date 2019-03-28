@@ -1,7 +1,11 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 const { addUser, authUser } = require('./controllers/user');
-const { saveSurvey, getSurveys } = require('./controllers/survey');
+const {
+  saveSurvey,
+  getSurveys,
+  getSurveyById
+} = require('./controllers/survey');
 const jwtMiddleware = require('koa-jwt');
 const logger = require('koa-logger');
 const mongoose = require('mongoose');
@@ -15,7 +19,7 @@ router.post('/sign-up', addUser);
 router.post('/sign-in', authUser);
 router.post('/save-survey', saveSurvey);
 router.get('/get-surveys', getSurveys);
-
+router.get('/get-survey-by-id', getSurveyById);
 router.use(
   jwtMiddleware({
     secret: process.env.SECRET

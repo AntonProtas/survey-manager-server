@@ -1,5 +1,5 @@
 const httpStatusCodes = require('http-status-codes');
-const { saveSurvey, getSurveys } = require('../services/survey');
+const { saveSurvey, getSurveys, getSurveyById } = require('../services/survey');
 
 exports.saveSurvey = async ctx => {
   try {
@@ -18,11 +18,40 @@ exports.saveSurvey = async ctx => {
 
 exports.getSurveys = async ctx => {
   try {
-    const { user } = ctx.request.query;
-    if (!!user) {
-      const surveys = await getSurveys(user);
+    const { user, limit, currentPage } = ctx.request.query;
+
+    console.log('user', user, 'limit', limit, 'currentPage', currentPage);
+
+    if (user && limit && currentPage) {
+      const surveys = await getSurveys(user, limit, currentPage);
+      console.log(surveys);
       ctx.body = {
-        surveys: surveys
+        surveys: surveys.docs,
+        total: surveys.total,
+        countPages: surveys.pages,
+        page: surveys.page
+      };
+      ctx.status = httpStatusCodes.OK;
+    } else {
+      ctx.body = {
+        message: 'valid error'
+      };
+      ctx.status = httpStatusCodes.BAD_REQUEST;
+    }
+  } catch (error) {
+    console.log(error);
+    ctx.status = httpStatusCodes.BAD_REQUEST;
+  }
+};
+
+exports.getSurveyById = async ctx => {
+  try {
+    const { id } = ctx.request.query;
+    console.log(id);
+    if (!!id) {
+      const survey = await getSurveyById(id);
+      ctx.body = {
+        survey: survey
       };
       ctx.status = httpStatusCodes.OK;
     } else {

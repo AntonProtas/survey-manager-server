@@ -1,4 +1,8 @@
-const { saveSurvey, getSurveys } = require('../repositories/survey');
+const {
+  saveSurvey,
+  getSurveys,
+  getSurveyById
+} = require('../repositories/survey');
 
 exports.saveSurvey = async data => {
   try {
@@ -8,9 +12,17 @@ exports.saveSurvey = async data => {
   }
 };
 
-exports.getSurveys = async user => {
+exports.getSurveys = async (user, limit, currentPage) => {
   try {
-    return await getSurveys(user);
+    return await getSurveys(user, limit, currentPage);
+  } catch (err) {
+    throw err;
+  }
+};
+
+exports.getSurveyById = async Id => {
+  try {
+    return await getSurveyById(Id);
   } catch (err) {
     throw err;
   }

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate');
 
 const SurveySchema = new mongoose.Schema(
   {
@@ -39,9 +40,15 @@ const SurveySchema = new mongoose.Schema(
         type: Boolean,
         required: true
       }
+    },
+    url: {
+      type: String,
+      required: true
     }
   },
   { versionKey: false }
 );
+
+SurveySchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('Survey', SurveySchema);

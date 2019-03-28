@@ -15,9 +15,13 @@ exports.authUser = async data => {
     const { password, email } = data;
     const user = await getUser(email);
     const passwordIsMatch = await user.comparePasswords(password);
+    console.log(user);
     if (!!user && passwordIsMatch) {
       return {
-        token: jwt.sign({ _id: user }, process.env.SECRET),
+        token: jwt.sign(
+          { id: user._id, username: user.username },
+          process.env.SECRET
+        ),
         username: user.username,
         email: user.email,
         id: user._id
