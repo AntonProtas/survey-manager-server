@@ -39,7 +39,9 @@ exports.getSurveys = async ctx => {
       ctx.status = httpStatusCodes.BAD_REQUEST;
     }
   } catch (error) {
-    console.log(error);
+    ctx.body = {
+      message: 'not found'
+    };
     ctx.status = httpStatusCodes.BAD_REQUEST;
   }
 };

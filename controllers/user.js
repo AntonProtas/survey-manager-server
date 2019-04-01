@@ -51,12 +51,12 @@ exports.authUser = async ctx => {
         };
         ctx.status = httpStatusCodes.OK;
       } else {
-        ctx.body = { message: 'username or pass didnt match' };
+        ctx.body = { message: "Username or pass didn't match" };
         ctx.status = httpStatusCodes.UNAUTHORIZED;
       }
     }
   } catch (err) {
     ctx.status = httpStatusCodes.BAD_REQUEST;
-    ctx.message = 'validation error';
+    ctx.body = { message: 'Incorrect username or password.' };
   }
 };
