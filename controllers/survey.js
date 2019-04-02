@@ -1,5 +1,6 @@
 const httpStatusCodes = require('http-status-codes');
 const { saveSurvey, getSurveys, getSurveyById } = require('../services/survey');
+const { saveSurveyResult } = require('../services/surveyResult');
 
 exports.saveSurvey = async ctx => {
   try {
@@ -9,6 +10,22 @@ exports.saveSurvey = async ctx => {
       message: 'survey save successful'
     };
   } catch (error) {
+    ctx.body = {
+      message: 'survey save failed'
+    };
+    ctx.status = httpStatusCodes.BAD_REQUEST;
+  }
+};
+
+exports.saveSurveyResult = async ctx => {
+  try {
+    saveSurveyResult(ctx.request.body);
+    ctx.status = httpStatusCodes.CREATED;
+    ctx.body = {
+      message: 'result save successful'
+    };
+  } catch (error) {
+    console.log(error);
     ctx.body = {
       message: 'survey save failed'
     };
