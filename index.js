@@ -5,7 +5,8 @@ const {
   saveSurvey,
   getSurveys,
   getSurveyById,
-  saveSurveyResult
+  saveSurveyResult,
+  getSurveyResults
 } = require('./controllers/survey');
 const jwtMiddleware = require('koa-jwt');
 const logger = require('koa-logger');
@@ -21,6 +22,7 @@ router.post('/sign-in', authUser);
 router.post('/save-survey', saveSurvey);
 router.get('/get-surveys', getSurveys);
 router.get('/get-survey-by-id', getSurveyById);
+router.get('/get-survey-results', getSurveyResults);
 router.post('/save-survey-result', saveSurveyResult);
 router.use(
   jwtMiddleware({

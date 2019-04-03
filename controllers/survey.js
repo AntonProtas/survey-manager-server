@@ -1,6 +1,9 @@
 const httpStatusCodes = require('http-status-codes');
 const { saveSurvey, getSurveys, getSurveyById } = require('../services/survey');
-const { saveSurveyResult } = require('../services/surveyResult');
+const {
+  saveSurveyResult,
+  getSurveyResults
+} = require('../services/surveyResult');
 
 exports.saveSurvey = async ctx => {
   try {
@@ -37,11 +40,8 @@ exports.getSurveys = async ctx => {
   try {
     const { user, limit, currentPage } = ctx.request.query;
 
-    console.log('user', user, 'limit', limit, 'currentPage', currentPage);
-
     if (user && limit && currentPage) {
       const surveys = await getSurveys(user, limit, currentPage);
-      console.log(surveys);
       ctx.body = {
         surveys: surveys.docs,
         total: surveys.total,
@@ -66,7 +66,6 @@ exports.getSurveys = async ctx => {
 exports.getSurveyById = async ctx => {
   try {
     const { id } = ctx.request.query;
-    console.log(id);
     if (!!id) {
       const survey = await getSurveyById(id);
       ctx.body = {
@@ -81,6 +80,30 @@ exports.getSurveyById = async ctx => {
     }
   } catch (error) {
     console.log(error);
+    ctx.status = httpStatusCodes.BAD_REQUEST;
+  }
+};
+
+exports.getSurveyResults = async ctx => {
+  try {
+    const { surveyId } = ctx.request.query;
+    if (!!surveyId) {
+      const results = await getSurveyResults(surveyId);
+      ctx.body = {
+        results: results
+      };
+      ctx.status = httpStatusCodes.OK;
+    } else {
+      ctx.body = {
+        message: 'valid error'
+      };
+      ctx.status = httpStatusCodes.BAD_REQUEST;
+    }
+  } catch (error) {
+    console.log(error);
+    ctx.body = {
+      message: 'SURVEYS RESULTS NOT FOUND'
+    };
     ctx.status = httpStatusCodes.BAD_REQUEST;
   }
 };
