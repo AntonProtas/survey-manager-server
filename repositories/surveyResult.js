@@ -10,3 +10,7 @@ exports.getSurveyResults = async id => {
     'answers userId -_id'
   );
 };
+
+exports.deleteSurveyResults = async id => {
+  return await SurveyResult.deleteMany({ surveyId: id });
+};

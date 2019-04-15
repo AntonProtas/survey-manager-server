@@ -1,11 +1,20 @@
 const {
   saveSurveyResult,
-  getSurveyResults
+  getSurveyResults,
+  deleteSurveyResults
 } = require('../repositories/surveyResult');
 
 exports.saveSurveyResult = async data => {
   try {
     await saveSurveyResult(data);
+  } catch (err) {
+    throw err;
+  }
+};
+
+exports.deleteSurveyResults = async data => {
+  try {
+    await deleteSurveyResults(data);
   } catch (err) {
     throw err;
   }

@@ -6,7 +6,8 @@ const {
   getSurveys,
   getSurveyById,
   saveSurveyResult,
-  getSurveyResults
+  getSurveyResults,
+  deleteSurvey
 } = require('./controllers/survey');
 const jwtMiddleware = require('koa-jwt');
 const logger = require('koa-logger');
@@ -19,7 +20,8 @@ require('dotenv').config();
 
 router.post('/sign-up', addUser);
 router.post('/sign-in', authUser);
-router.post('/save-survey', saveSurvey);
+router.post('/save-survey',checkAuth, saveSurvey);
+router.delete('/delete-survey', deleteSurvey);
 router.get('/get-surveys', getSurveys);
 router.get('/get-survey-by-id', getSurveyById);
 router.get('/get-survey-results', getSurveyResults);

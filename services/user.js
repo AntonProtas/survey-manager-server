@@ -19,7 +19,7 @@ exports.authUser = async data => {
     if (!!user && passwordIsMatch) {
       return {
         token: jwt.sign(
-          { id: user._id, username: user.username },
+          { id: user._id, username: user.username,  },
           process.env.SECRET
         ),
         username: user.username,

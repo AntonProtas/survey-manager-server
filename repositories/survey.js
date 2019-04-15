@@ -22,3 +22,7 @@ exports.getSurveys = async (user, limit, currentPage) => {
 exports.getSurveyById = async id => {
   return await Survey.find({ _id: id }).select('surveyName pages setting');
 };
+
+exports.deleteSurvey = async id => {
+  return await Survey.deleteOne({ _id: id });
+};

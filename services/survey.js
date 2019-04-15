@@ -1,12 +1,21 @@
 const {
   saveSurvey,
   getSurveys,
-  getSurveyById
+  getSurveyById,
+  deleteSurvey
 } = require('../repositories/survey');
 
 exports.saveSurvey = async data => {
   try {
     await saveSurvey(data);
+  } catch (err) {
+    throw err;
+  }
+};
+
+exports.deleteSurvey = async data => {
+  try {
+    await deleteSurvey(data);
   } catch (err) {
     throw err;
   }
