@@ -9,7 +9,7 @@ const {
   getSurveyResults,
   deleteSurvey
 } = require('./controllers/survey');
-const jwtMiddleware = require('koa-jwt');
+const { checkAuth } = require('./middleware/checkAuth');
 const logger = require('koa-logger');
 const mongoose = require('mongoose');
 const bodyParser = require('koa-bodyparser');
@@ -20,17 +20,12 @@ require('dotenv').config();
 
 router.post('/sign-up', addUser);
 router.post('/sign-in', authUser);
-router.post('/save-survey',checkAuth, saveSurvey);
-router.delete('/delete-survey', deleteSurvey);
-router.get('/get-surveys', getSurveys);
-router.get('/get-survey-by-id', getSurveyById);
-router.get('/get-survey-results', getSurveyResults);
+router.post('/save-survey', checkAuth, saveSurvey);
+router.delete('/delete-survey', checkAuth, deleteSurvey);
+router.get('/get-surveys', checkAuth, getSurveys);
+router.get('/get-survey-by-id', checkAuth, getSurveyById);
+router.get('/get-survey-results', checkAuth, getSurveyResults);
 router.post('/save-survey-result', saveSurveyResult);
-router.use(
-  jwtMiddleware({
-    secret: process.env.SECRET
-  })
-);
 
 mongoose.set('debug', true);
 mongoose.Promise = global.Promise;

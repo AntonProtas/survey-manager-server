@@ -12,7 +12,6 @@ const {
 } = require('../services/surveyResult');
 
 exports.saveSurvey = async ctx => {
-  console.log(ctx.request.body);
   try {
     await saveSurvey(ctx.request.body);
     ctx.status = httpStatusCodes.CREATED;
