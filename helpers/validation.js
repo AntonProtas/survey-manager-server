@@ -12,7 +12,8 @@ exports.validationSchemaUser = {
     .min(6)
     .regex(/^(?=(.*\d){2,})/)
     .regex(/^(?=.*[A-Z]{1,})/)
-    .trim()
+    .trim(),
+  role: Joi.string()
 };
 
 exports.validationSchemaAuthUser = {

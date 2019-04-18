@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Role = require('./../models/role');
 
 exports.saveUser = async userData => {
   const user = new User(userData);
@@ -6,5 +7,5 @@ exports.saveUser = async userData => {
 };
 
 exports.getUser = async email => {
-  return await User.findOne({ email });
+  return await User.findOne({ email }).populate('role');
 };
