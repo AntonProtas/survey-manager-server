@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const mongoosePaginate = require('mongoose-paginate');
 
 const UserSchema = new mongoose.Schema(
   {
@@ -16,7 +17,11 @@ const UserSchema = new mongoose.Schema(
       required: true,
       type: String
     },
-    role: { type: mongoose.Schema.Types.ObjectId, ref: 'Role', required: true }
+    role: { type: mongoose.Schema.Types.ObjectId, ref: 'Role', required: true },
+    registrationDate: {
+      required: true,
+      type: String
+    }
   },
   { versionKey: false }
 );
@@ -40,5 +45,6 @@ UserSchema.methods.comparePasswords = async function(candidatePassword) {
     throw error;
   }
 };
+UserSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('User', UserSchema);

@@ -13,7 +13,8 @@ exports.validationSchemaUser = {
     .regex(/^(?=(.*\d){2,})/)
     .regex(/^(?=.*[A-Z]{1,})/)
     .trim(),
-  role: Joi.string()
+  role: Joi.string(),
+  registrationDate: Joi.string()
 };
 
 exports.validationSchemaAuthUser = {

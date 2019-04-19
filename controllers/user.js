@@ -40,7 +40,6 @@ exports.authUser = async ctx => {
       ctx.body = error;
     } else {
       const dataUser = await authUser(value);
-
       if (!!dataUser) {
         ctx.body = {
           message: 'Login successful',

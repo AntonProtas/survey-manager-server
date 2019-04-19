@@ -1,6 +1,7 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 const { addUser, authUser } = require('./controllers/user');
+const { getUsersData } = require('./controllers/users');
 const {
   saveSurvey,
   getSurveys,
@@ -26,6 +27,7 @@ router.get('/get-surveys', checkAuth, getSurveys);
 router.get('/get-survey-by-id', checkAuth, getSurveyById);
 router.get('/get-survey-results', checkAuth, getSurveyResults);
 router.post('/save-survey-result', saveSurveyResult);
+router.get('/get-users-data', getUsersData);
 
 mongoose.set('debug', true);
 mongoose.Promise = global.Promise;

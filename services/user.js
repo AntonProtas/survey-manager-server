@@ -4,6 +4,11 @@ const jwt = require('jsonwebtoken');
 
 exports.addUser = async data => {
   try {
+    let today = new Date();
+    today = `${String(today.getMonth() + 1).padStart(2, '0')}/${String(
+      today.getDate()
+    ).padStart(2, '0')}/${today.getFullYear()}`;
+    data.registrationDate = today;
     await saveUser(data);
   } catch (err) {
     throw err;
@@ -15,6 +20,7 @@ exports.authUser = async data => {
     const { password, email } = data;
     const user = await getUser(email);
     const passwordIsMatch = await user.comparePasswords(password);
+    console.log(user, passwordIsMatch);
     if (!!user && passwordIsMatch) {
       return {
         token: jwt.sign(
