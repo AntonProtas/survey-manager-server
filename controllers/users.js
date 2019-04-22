@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const httpStatusCodes = require('http-status-codes');
 const {
   getUsersData,
@@ -5,6 +6,10 @@ const {
   changeUserEmail,
   deleteUser
 } = require('../services/users');
+=======
+const httpStatusCodes = require("http-status-codes");
+const { getUsersData } = require("../services/users");
+>>>>>>> 1655682d6578447d4f9af3d68294f8d58ccc7eaa
 
 exports.getUsersData = async ctx => {
   try {
@@ -24,6 +29,7 @@ exports.getUsersData = async ctx => {
     console.log(error);
     ctx.status = httpStatusCodes.BAD_REQUEST;
   }
+<<<<<<< HEAD
 };
 
 exports.changeUserName = async ctx => {
@@ -75,4 +81,6 @@ exports.deleteUser = async ctx => {
     console.log(error);
     ctx.status = httpStatusCodes.BAD_REQUEST;
   }
+=======
+>>>>>>> 1655682d6578447d4f9af3d68294f8d58ccc7eaa
 };
