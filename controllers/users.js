@@ -1,26 +1,78 @@
-const User = require('../models/user');
-const Role = require('../models/role');
-const SurveyResult = require('../models/surveyResult');
-const Survey = require('../models/survey');
+const httpStatusCodes = require('http-status-codes');
+const {
+  getUsersData,
+  changeUserName,
+  changeUserEmail,
+  deleteUser
+} = require('../services/users');
 
 exports.getUsersData = async ctx => {
-  const { limit, currentPage } = ctx.request.query;
-  const options = {
-    select: '',
-    populate: 'role',
-    limit: parseInt(limit, 10),
-    page: parseInt(currentPage, 10)
-  };
+  try {
+    const { limit, currentPage } = ctx.request.query;
+    if (!!limit && !!currentPage) {
+      const result = await getUsersData(limit, currentPage);
+      ctx.body = {
+        ...result
+      };
+      ctx.status = httpStatusCodes.OK;
+    } else {
+      console.log(error);
+      ctx.body = error;
+      ctx.status = httpStatusCodes.BAD_REQUEST;
+    }
+  } catch (error) {
+    console.log(error);
+    ctx.status = httpStatusCodes.BAD_REQUEST;
+  }
+};
 
-  const query = {};
+exports.changeUserName = async ctx => {
+  try {
+    const { id, newName } = ctx.request.body;
+    if (!!id && !!newName) {
+      await changeUserName(id, newName);
+      ctx.status = httpStatusCodes.OK;
+    } else {
+      console.log(error);
+      ctx.body = error;
+      ctx.status = httpStatusCodes.BAD_REQUEST;
+    }
+  } catch (error) {
+    console.log(error);
+    ctx.status = httpStatusCodes.BAD_REQUEST;
+  }
+};
 
-  const usersData = await User.paginate(query, options);
+exports.changeUserEmail = async ctx => {
+  try {
+    const { id, newEmail } = ctx.request.body;
+    if (!!id && !!newEmail) {
+      await changeUserEmail(id, newEmail);
+      ctx.status = httpStatusCodes.OK;
+    } else {
+      console.log(error);
+      ctx.body = error;
+      ctx.status = httpStatusCodes.BAD_REQUEST;
+    }
+  } catch (error) {
+    console.log(error);
+    ctx.status = httpStatusCodes.BAD_REQUEST;
+  }
+};
 
-  const usersId = usersData.docs.map(item => item._id);
-
-  const data = usersId.forEach(item => aswSurvey.find({ user: item }));
-
-  ctx.body = {
-    data
-  };
+exports.deleteUser = async ctx => {
+  try {
+    const { id } = ctx.request.body;
+    if (!!id) {
+      await deleteUser(id);
+      ctx.status = httpStatusCodes.OK;
+    } else {
+      console.log(error);
+      ctx.body = error;
+      ctx.status = httpStatusCodes.BAD_REQUEST;
+    }
+  } catch (error) {
+    console.log(error);
+    ctx.status = httpStatusCodes.BAD_REQUEST;
+  }
 };
