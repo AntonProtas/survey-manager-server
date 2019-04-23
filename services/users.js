@@ -1,13 +1,10 @@
-<<<<<<< HEAD
 const {
   getUsersData,
   changeUserName,
   changeUserEmail,
-  deleteUser
+  deleteUser,
+  changeUserRole
 } = require('../repositories/users');
-=======
-const { getUsersData } = require("../repositories/users");
->>>>>>> 1655682d6578447d4f9af3d68294f8d58ccc7eaa
 
 exports.getUsersData = async (limit, currentPage) => {
   try {
@@ -16,7 +13,6 @@ exports.getUsersData = async (limit, currentPage) => {
     throw err;
   }
 };
-<<<<<<< HEAD
 
 exports.changeUserName = async (id, newName) => {
   try {
@@ -41,5 +37,11 @@ exports.deleteUser = async id => {
     throw err;
   }
 };
-=======
->>>>>>> 1655682d6578447d4f9af3d68294f8d58ccc7eaa
+
+exports.changeUserRole = async (newRole, userId) => {
+  try {
+    return await changeUserRole(newRole, userId);
+  } catch (err) {
+    throw err;
+  }
+};

@@ -5,7 +5,8 @@ const {
   getUsersData,
   changeUserName,
   changeUserEmail,
-  deleteUser
+  deleteUser,
+  changeUserRole
 } = require('./controllers/users');
 const {
   saveSurvey,
@@ -36,6 +37,7 @@ router.get('/get-users-data', checkAuth, getUsersData);
 router.post('/change-user-name', checkAuth, changeUserName);
 router.post('/change-user-email', checkAuth, changeUserEmail);
 router.post('/delete-user', checkAuth, deleteUser);
+router.post('/change-user-role', changeUserRole);
 
 mongoose.set('debug', true);
 mongoose.Promise = global.Promise;
