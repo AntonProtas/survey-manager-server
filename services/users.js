@@ -6,9 +6,9 @@ const {
   changeUserRole
 } = require('../repositories/users');
 
-exports.getUsersData = async (limit, currentPage) => {
+exports.getUsersData = async (limit, currentPage, sort = 'default') => {
   try {
-    return await getUsersData(limit, currentPage);
+    return await getUsersData(limit, currentPage, sort);
   } catch (err) {
     throw err;
   }

@@ -9,9 +9,9 @@ const {
 
 exports.getUsersData = async ctx => {
   try {
-    const { limit, currentPage } = ctx.request.query;
+    const { limit, currentPage, sort } = ctx.request.query;
     if (!!limit && !!currentPage) {
-      const result = await getUsersData(limit, currentPage);
+      const result = await getUsersData(limit, currentPage, sort);
       ctx.body = {
         ...result
       };

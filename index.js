@@ -17,6 +17,7 @@ const {
   deleteSurvey
 } = require('./controllers/survey');
 const { checkAuth } = require('./middleware/checkAuth');
+const { checkAdmin } = require('./middleware/checkAdmin');
 const logger = require('koa-logger');
 const mongoose = require('mongoose');
 const bodyParser = require('koa-bodyparser');
@@ -33,11 +34,21 @@ router.get('/get-surveys', checkAuth, getSurveys);
 router.get('/get-survey-by-id', checkAuth, getSurveyById);
 router.get('/get-survey-results', checkAuth, getSurveyResults);
 router.post('/save-survey-result', saveSurveyResult);
-router.get('/get-users-data', checkAuth, getUsersData);
-router.post('/change-user-name', checkAuth, changeUserName);
-router.post('/change-user-email', checkAuth, changeUserEmail);
-router.post('/delete-user', checkAuth, deleteUser);
-router.post('/change-user-role', changeUserRole);
+
+router.get('/get-users-data', checkAdmin, getUsersData);
+
+router.post('/change-user-name', checkAdmin, changeUserName);
+router.post('/change-user-email', checkAdmin, changeUserEmail);
+router.post('/delete-user', checkAdmin, deleteUser);
+router.post('/change-user-role', checkAdmin, changeUserRole);
+
+const User = require('./models/user');
+router.get('/get-users', async ctx => {
+  const users = await User.find({}).sort('registrationDate');
+  ctx.body = {
+    ...users
+  };
+});
 
 mongoose.set('debug', true);
 mongoose.Promise = global.Promise;

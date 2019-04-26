@@ -2,9 +2,17 @@ const User = require('../models/user');
 const Survey = require('../models/survey');
 const Role = require('../models/role');
 
-exports.getUsersData = async (limit, currentPage) => {
+exports.getUsersData = async (limit, currentPage, sort) => {
+  const sortTypes = {
+    default: '',
+    'old-to-new': '-registrationDate',
+    'A-Z': 'username',
+    'Z-A': '-username'
+  };
+
   const options = {
     select: 'username email role registrationDate',
+    sort: `${sortTypes[sort]}`,
     populate: 'role',
     limit: parseInt(limit, 10),
     page: parseInt(currentPage, 10)

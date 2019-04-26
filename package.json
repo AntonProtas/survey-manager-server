@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.443.0",
     "bcrypt": "^1.0.3",
     "bcrypt-promise": "^2.0.0",
     "bcryptjs": "^2.4.3",
@@ -26,6 +27,8 @@
     "koa2-cors": "^2.0.6",
     "mongoose": "^5.0.11",
     "mongoose-paginate": "^5.0.3",
+    "multer": "^1.4.1",
+    "multer-s3": "^2.9.0",
     "react-charts": "^2.0.0-alpha.12",
     "uuid": "^3.3.2"
   },
