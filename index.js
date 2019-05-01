@@ -24,6 +24,8 @@ const bodyParser = require('koa-bodyparser');
 const cors = require('koa2-cors');
 const router = new Router();
 const app = new Koa();
+const fs = require('fs');
+const { Document, Packer, Paragraph, TextRun } = require('docx');
 require('dotenv').config();
 
 router.post('/sign-up', addUser);
@@ -43,11 +45,39 @@ router.post('/delete-user', checkAdmin, deleteUser);
 router.post('/change-user-role', checkAdmin, changeUserRole);
 
 const User = require('./models/user');
-router.get('/get-users', async ctx => {
+
+router.get('/get-data-json', async ctx => {
   const users = await User.find({}).sort('registrationDate');
+  console.log(JSON.stringify(users, null, 4));
+  fs.writeFile('users-data.json', JSON.stringify(users, null, 4), function(err) {
+    if (err) throw err;
+    console.log('The "data to append" was appended to file!');
+  });
   ctx.body = {
-    ...users
+    message: 'all ok'
   };
+});
+
+router.get('/get-data-docx', async ctx => {
+  const users = await User.find({}).sort('registrationDate');
+  const doc = new Document();
+
+  users.map(user => {
+    const paragraph = new Paragraph(`
+    id - ${user._id} 
+    username - ${user.username} 
+    email - ${user.email} 
+    password - ${user.password} 
+    role - ${user.role}
+    registrationDate - ${user.registrationDate}
+  `);
+    doc.addParagraph(paragraph);
+  });
+
+  const packer = new Packer();
+  packer.toBuffer(doc).then(buffer => {
+    fs.writeFileSync('users-data.docx', buffer);
+  });
 });
 
 mongoose.set('debug', true);
