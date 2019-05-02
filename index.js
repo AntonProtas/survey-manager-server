@@ -16,6 +16,7 @@ const {
   getSurveyResults,
   deleteSurvey
 } = require('./controllers/survey');
+const { handleApiError } = require('./ER/errorHandler');
 const { checkAuth } = require('./middleware/checkAuth');
 const { checkAdmin } = require('./middleware/checkAdmin');
 const logger = require('koa-logger');
@@ -49,7 +50,9 @@ const User = require('./models/user');
 router.get('/get-data-json', async ctx => {
   const users = await User.find({}).sort('registrationDate');
   console.log(JSON.stringify(users, null, 4));
-  fs.writeFile('users-data.json', JSON.stringify(users, null, 4), function(err) {
+  fs.writeFile('users-data.json', JSON.stringify(users, null, 4), function(
+    err
+  ) {
     if (err) throw err;
     console.log('The "data to append" was appended to file!');
   });
@@ -93,6 +96,7 @@ app.use(logger());
 app.use(bodyParser());
 app.use(cors());
 app.use(router.routes());
+app.use(handleApiError);
 app.listen(process.env.PORT, () =>
   console.log(`Server started on port ${process.env.PORT}`)
 );

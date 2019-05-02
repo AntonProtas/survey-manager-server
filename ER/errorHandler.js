@@ -1,28 +1,7 @@
-const ValidError = require('./errors/validError');
-const MustBeUnique = require('./errors/MustBeUniqueError');
-const NotFoundError = require('./errors/NotFoundError');
-const NotMatchError = require('./errors/NotMatchError');
+const ApiError = require('./errors/ApiError');
 
 exports.handleApiError = async (ctx, next) => {
-  if (ctx.state.error instanceof ValidError) {
-    ctx.body = {
-      message: ctx.state.error.message
-    };
-    ctx.status = ctx.state.error.code;
-  }
-  if (ctx.state.error instanceof MustBeUnique) {
-    ctx.body = {
-      message: ctx.state.error.message
-    };
-    ctx.status = ctx.state.error.code;
-  }
-  if (ctx.state.error instanceof NotFoundError) {
-    ctx.body = {
-      message: ctx.state.error.message
-    };
-    ctx.status = ctx.state.error.code;
-  }
-  if (ctx.state.error instanceof NotMatchError) {
+  if (ctx.state.error instanceof ApiError) {
     ctx.body = {
       message: ctx.state.error.message
     };
