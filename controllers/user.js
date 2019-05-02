@@ -7,39 +7,45 @@ const {
   validationSchemaAuthUser
 } = require('../helpers/validation');
 
-exports.addUser = async ctx => {
+const validError = require('../ER/errors/validError');
+
+exports.addUser = async (ctx, next) => {
   try {
     const { error, value } = validation(ctx.request.body, validationSchemaUser);
     if (!!error) {
-      ctx.status = httpStatusCodes.BAD_REQUEST;
-      ctx.body = error;
+      throw new validError(error.details[0].message);
     } else {
-      await addUser(value);
+      await addUser({
+        username: value.username,
+        email: value.email.toLowerCase(),
+        password: value.password,
+        role: value.role
+      });
       ctx.status = httpStatusCodes.CREATED;
       ctx.body = {
         username: value.username,
-        email: value.email
+        email: value.email.toLowerCase()
       };
     }
-  } catch (err) {
-    ctx.status = httpStatusCodes.FORBIDDEN;
-    ctx.body = {
-      message: 'email already exists'
-    };
+  } catch (error) {
+    ctx.state.error = error;
+    await next();
   }
 };
 
-exports.authUser = async ctx => {
+exports.authUser = async (ctx, next) => {
   try {
     const { error, value } = validation(
       ctx.request.body,
       validationSchemaAuthUser
     );
     if (!!error) {
-      ctx.status = httpStatusCodes.BAD_REQUEST;
-      ctx.body = error;
+      throw new validError(error.details[0].message);
     } else {
-      const dataUser = await authUser(value);
+      const dataUser = await authUser({
+        email: value.email.toLowerCase(),
+        password: value.password
+      });
       if (!!dataUser) {
         ctx.body = {
           message: 'Login successful',
@@ -49,13 +55,10 @@ exports.authUser = async ctx => {
           id: dataUser.id
         };
         ctx.status = httpStatusCodes.OK;
-      } else {
-        ctx.body = { message: "Username or pass didn't match" };
-        ctx.status = httpStatusCodes.UNAUTHORIZED;
       }
     }
-  } catch (err) {
-    ctx.status = httpStatusCodes.BAD_REQUEST;
-    ctx.body = { message: 'Incorrect username or password.' };
+  } catch (error) {
+    ctx.state.error = error;
+    await next();
   }
 };

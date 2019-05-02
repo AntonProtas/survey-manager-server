@@ -10,4 +10,3 @@ exports.checkAuth = async (ctx, next) => {
     console.log(err);
   }
 };
-

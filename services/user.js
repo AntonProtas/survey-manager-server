@@ -1,6 +1,8 @@
 const { saveUser } = require('../repositories/user');
 const { getUser } = require('../repositories/user');
 const jwt = require('jsonwebtoken');
+const NotFoundError = require('../ER/errors/NotFoundError');
+const NotMatchError = require('../ER/errors/NotMatchError');
 
 exports.addUser = async data => {
   try {
@@ -19,8 +21,13 @@ exports.authUser = async data => {
   try {
     const { password, email } = data;
     const user = await getUser(email);
+    if (!user) {
+      throw new NotFoundError('user');
+    }
     const passwordIsMatch = await user.comparePasswords(password);
-    console.log(user, passwordIsMatch);
+    if (!passwordIsMatch) {
+      throw new NotMatchError('email or password');
+    }
     if (!!user && passwordIsMatch) {
       return {
         token: jwt.sign(
@@ -34,7 +41,7 @@ exports.authUser = async data => {
     } else {
       return false;
     }
-  } catch (err) {
-    throw err;
+  } catch (error) {
+    throw error;
   }
 };

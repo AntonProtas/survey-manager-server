@@ -26,6 +26,7 @@ exports.validationSchemaAuthUser = {
     .regex(/^(?=(.*\d){2,})/)
     .regex(/^(?=.*[A-Z]{1,})/)
     .trim()
+    .required()
 };
 
 exports.validation = (value, schema) => {

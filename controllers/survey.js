@@ -78,12 +78,14 @@ exports.getSurveys = async ctx => {
         message: 'valid error'
       };
       ctx.status = httpStatusCodes.BAD_REQUEST;
+      throw new MyError('bla');
     }
   } catch (error) {
     ctx.body = {
       message: 'not found'
     };
     ctx.status = httpStatusCodes.BAD_REQUEST;
+    next(err)
   }
 };
 
