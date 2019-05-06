@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const AccessError = require('../ER/errors/AccessError');
 
 exports.checkAuth = async (ctx, next) => {
   console.log(ctx.request);
@@ -7,6 +8,6 @@ exports.checkAuth = async (ctx, next) => {
     jwt.verify(token, process.env.SECRET);
     await next();
   } catch (err) {
-    console.log(err);
+    throw new AccessError('logged');
   }
 };
