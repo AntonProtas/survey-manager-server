@@ -59,6 +59,8 @@ router.get('/get-data-json', async ctx => {
   ctx.body = {
     message: 'all ok'
   };
+
+  ctx.status = 200;
 });
 
 router.get('/get-data-docx', async ctx => {
@@ -66,21 +68,30 @@ router.get('/get-data-docx', async ctx => {
   const doc = new Document();
 
   users.map(user => {
-    const paragraph = new Paragraph(`
-    id - ${user._id} 
-    username - ${user.username} 
-    email - ${user.email} 
-    password - ${user.password} 
-    role - ${user.role}
-    registrationDate - ${user.registrationDate}
-  `);
-    doc.addParagraph(paragraph);
+    const paragraph1 = new Paragraph(`id - ${user._id} `);
+    doc.addParagraph(paragraph1);
+    const paragraph2 = new Paragraph(`username - ${user.username} `);
+    doc.addParagraph(paragraph2);
+    const paragraph3 = new Paragraph(`email - ${user.email} `);
+    doc.addParagraph(paragraph3);
+    const paragraph4 = new Paragraph(`password - ${user.password} `);
+    doc.addParagraph(paragraph4);
+    const paragraph5 = new Paragraph(`role - ${user.role} `);
+    doc.addParagraph(paragraph5);
+    const paragraph6 = new Paragraph(
+      `registrationDate - ${user.registrationDate} `
+    );
+    doc.addParagraph(paragraph6);
+    const paragraph7 = new Paragraph(`---------------------------- `);
+    doc.addParagraph(paragraph7);
   });
 
   const packer = new Packer();
   packer.toBuffer(doc).then(buffer => {
     fs.writeFileSync('users-data.docx', buffer);
   });
+
+  ctx.status = 200;
 });
 
 mongoose.set('debug', true);
