@@ -16,13 +16,13 @@ exports.saveSurvey = async ctx => {
     await saveSurvey(ctx.request.body);
     ctx.status = httpStatusCodes.CREATED;
     ctx.body = {
-      message: 'survey save successful'
+      message: 'survey has been saved'
     };
   } catch (error) {
     ctx.body = {
       message: 'survey save failed'
     };
-    ctx.status = httpStatusCodes.BAD_REQUEST;
+    ctx.status = httpStatusCodes.NOT_FOUND;
   }
 };
 
@@ -40,7 +40,7 @@ exports.deleteSurvey = async ctx => {
     ctx.body = {
       message: 'survey delete failed'
     };
-    ctx.status = httpStatusCodes.BAD_REQUEST;
+    ctx.status = httpStatusCodes.NOT_FOUND;
   }
 };
 
@@ -56,7 +56,7 @@ exports.saveSurveyResult = async ctx => {
     ctx.body = {
       message: 'survey save failed'
     };
-    ctx.status = httpStatusCodes.BAD_REQUEST;
+    ctx.status = httpStatusCodes.NOT_FOUND;
   }
 };
 
@@ -84,8 +84,8 @@ exports.getSurveys = async ctx => {
     ctx.body = {
       message: 'not found'
     };
-    ctx.status = httpStatusCodes.BAD_REQUEST;
-    next(err)
+    ctx.status = httpStatusCodes.NOT_FOUND;
+    next(err);
   }
 };
 
