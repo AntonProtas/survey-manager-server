@@ -57,7 +57,7 @@ app.use(logger());
 app.use(bodyParser());
 app.use(cors());
 app.use(router.routes());
-app.use(handleApiError);
+app.on('error', handleApiError);
 app.listen(process.env.PORT, () =>
   console.log(`Server started on port ${process.env.PORT}`)
 );

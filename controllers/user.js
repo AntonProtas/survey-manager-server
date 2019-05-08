@@ -9,7 +9,7 @@ const {
 
 const validError = require('../ER/errors/validError');
 
-exports.addUser = async (ctx, next) => {
+exports.addUser = async ctx => {
   try {
     const { error, value } = validation(ctx.request.body, validationSchemaUser);
     if (!!error) {
@@ -28,12 +28,11 @@ exports.addUser = async (ctx, next) => {
       };
     }
   } catch (error) {
-    ctx.state.error = error;
-    await next();
+    ctx.app.emit('error', error, ctx);
   }
 };
 
-exports.authUser = async (ctx, next) => {
+exports.authUser = async ctx => {
   try {
     const { error, value } = validation(
       ctx.request.body,
@@ -58,7 +57,6 @@ exports.authUser = async (ctx, next) => {
       }
     }
   } catch (error) {
-    ctx.state.error = error;
-    await next();
+    ctx.app.emit('error', error, ctx);
   }
 };

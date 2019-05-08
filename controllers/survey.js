@@ -11,6 +11,9 @@ const {
   deleteSurveyResults
 } = require('../services/surveyResult');
 
+const { validation, surveysGetSchema } = require('../helpers/validation');
+const validError = require('../ER/errors/validError');
+
 exports.saveSurvey = async ctx => {
   try {
     await saveSurvey(ctx.request.body);
@@ -19,10 +22,7 @@ exports.saveSurvey = async ctx => {
       message: 'survey has been saved'
     };
   } catch (error) {
-    ctx.body = {
-      message: 'survey save failed'
-    };
-    ctx.status = httpStatusCodes.NOT_FOUND;
+    ctx.app.emit('error', error, ctx);
   }
 };
 
@@ -36,11 +36,7 @@ exports.deleteSurvey = async ctx => {
       message: 'survey delete successful'
     };
   } catch (error) {
-    console.log(error);
-    ctx.body = {
-      message: 'survey delete failed'
-    };
-    ctx.status = httpStatusCodes.NOT_FOUND;
+    ctx.app.emit('error', error, ctx);
   }
 };
 
@@ -52,20 +48,21 @@ exports.saveSurveyResult = async ctx => {
       message: 'result save successful'
     };
   } catch (error) {
-    console.log(error);
-    ctx.body = {
-      message: 'survey save failed'
-    };
-    ctx.status = httpStatusCodes.NOT_FOUND;
+    ctx.app.emit('error', error, ctx);
   }
 };
 
 exports.getSurveys = async ctx => {
   try {
-    const { user, limit, currentPage } = ctx.request.query;
-
-    if (user && limit && currentPage) {
-      const surveys = await getSurveys(user, limit, currentPage);
+    const { error, value } = validation(ctx.request.query, surveysGetSchema);
+    if (!!error) {
+      throw new validError(error.details[0].message);
+    } else {
+      const surveys = await getSurveys(
+        value.user,
+        value.limit,
+        value.currentPage
+      );
       ctx.body = {
         surveys: surveys.docs,
         total: surveys.total,
@@ -73,63 +70,41 @@ exports.getSurveys = async ctx => {
         page: surveys.page
       };
       ctx.status = httpStatusCodes.OK;
-    } else {
-      ctx.body = {
-        message: 'valid error'
-      };
-      ctx.status = httpStatusCodes.BAD_REQUEST;
-      throw new MyError('bla');
     }
   } catch (error) {
-    ctx.body = {
-      message: 'not found'
-    };
-    ctx.status = httpStatusCodes.NOT_FOUND;
-    next(err);
+    ctx.app.emit('error', error, ctx);
   }
 };
 
 exports.getSurveyById = async ctx => {
   try {
     const { id } = ctx.request.query;
-    if (!!id) {
+    if (!id) {
+      throw new validError('id is required');
+    } else {
       const survey = await getSurveyById(id);
       ctx.body = {
         survey: survey
       };
-      ctx.status = httpStatusCodes.OK;
-    } else {
-      ctx.body = {
-        message: 'valid error'
-      };
-      ctx.status = httpStatusCodes.BAD_REQUEST;
     }
   } catch (error) {
-    console.log(error);
-    ctx.status = httpStatusCodes.BAD_REQUEST;
+    ctx.app.emit('error', error, ctx);
   }
 };
 
 exports.getSurveyResults = async ctx => {
   try {
     const { surveyId } = ctx.request.query;
-    if (!!surveyId) {
+    if (!surveyId) {
+      throw new validError('surveyId is required');
+    } else {
       const results = await getSurveyResults(surveyId);
       ctx.body = {
         results: results
       };
       ctx.status = httpStatusCodes.OK;
-    } else {
-      ctx.body = {
-        message: 'valid error'
-      };
-      ctx.status = httpStatusCodes.BAD_REQUEST;
     }
   } catch (error) {
-    console.log(error);
-    ctx.body = {
-      message: 'SURVEYS RESULTS NOT FOUND'
-    };
-    ctx.status = httpStatusCodes.BAD_REQUEST;
+    ctx.app.emit('error', error, ctx);
   }
 };
