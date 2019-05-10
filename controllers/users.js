@@ -10,7 +10,7 @@ const {
 exports.getUsersData = async ctx => {
   try {
     const { limit, currentPage, sort } = ctx.request.query;
-    if (!!limit && !!currentPage) {
+    if (!!limit && !!currentPage && !!sort) {
       const result = await getUsersData(limit, currentPage, sort);
       ctx.body = {
         ...result

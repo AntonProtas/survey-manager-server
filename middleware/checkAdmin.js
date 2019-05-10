@@ -1,16 +1,20 @@
 const jwt = require('jsonwebtoken');
+const AccessError = require('../ER/errors/AccessError');
+const ValidError = require('../ER/errors/ValidError');
 
 exports.checkAdmin = async (ctx, next) => {
-  console.log(ctx.request);
   try {
     const token = ctx.request.header.token;
-    const decoded = jwt.verify(token, process.env.SECRET);
-    if (decoded.role === 'admin') {
-      await next();
+
+    if (!token) {
+      throw new ValidError('token not found!');
     } else {
-      throw new Error("don't have admin rights");
+      const decoded = jwt.verify(token, process.env.SECRET);
+      if (decoded.role === 'admin') {
+        await next();
+      }
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    ctx.app.emit('error', new AccessError('administrator!'), ctx);
   }
 };

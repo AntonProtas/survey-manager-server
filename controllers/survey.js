@@ -12,7 +12,7 @@ const {
 } = require('../services/surveyResult');
 
 const { validation, surveysGetSchema } = require('../helpers/validation');
-const validError = require('../ER/errors/validError');
+const validError = require('../ER/errors/ValidError');
 
 exports.saveSurvey = async ctx => {
   try {

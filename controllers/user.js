@@ -7,7 +7,7 @@ const {
   validationSchemaAuthUser
 } = require('../helpers/validation');
 
-const validError = require('../ER/errors/validError');
+const validError = require('../ER/errors/ValidError');
 
 exports.addUser = async ctx => {
   try {

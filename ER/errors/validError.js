@@ -1,9 +1,8 @@
 const ClientError = require('./ClientError');
 const httpStatusCodes = require('http-status-codes');
-class validError extends ClientError {
+class ValidError extends ClientError {
   constructor(message) {
-    
     super(httpStatusCodes.FORBIDDEN, message);
   }
 }
-module.exports = validError;
+module.exports = ValidError;
