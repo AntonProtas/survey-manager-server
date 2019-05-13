@@ -11,50 +11,15 @@ const {
   deleteSurveyResults
 } = require('../services/surveyResult');
 
-const { validation, surveysGetSchema } = require('../helpers/validation');
+const { validation, surveySchema } = require('../helpers/validation');
 const validError = require('../ER/errors/ValidError');
-
-exports.saveSurvey = async ctx => {
-  try {
-    await saveSurvey(ctx.request.body);
-    ctx.status = httpStatusCodes.CREATED;
-    ctx.body = {
-      message: 'survey has been saved'
-    };
-  } catch (error) {
-    ctx.app.emit('error', error, ctx);
-  }
-};
-
-exports.deleteSurvey = async ctx => {
-  try {
-    const { id } = ctx.request.query;
-    await deleteSurvey(id);
-    await deleteSurveyResults(id);
-    ctx.status = httpStatusCodes.CREATED;
-    ctx.body = {
-      message: 'survey delete successful'
-    };
-  } catch (error) {
-    ctx.app.emit('error', error, ctx);
-  }
-};
-
-exports.saveSurveyResult = async ctx => {
-  try {
-    saveSurveyResult(ctx.request.body);
-    ctx.status = httpStatusCodes.CREATED;
-    ctx.body = {
-      message: 'result save successful'
-    };
-  } catch (error) {
-    ctx.app.emit('error', error, ctx);
-  }
-};
 
 exports.getSurveys = async ctx => {
   try {
-    const { error, value } = validation(ctx.request.query, surveysGetSchema);
+    const { error, value } = validation(
+      ctx.request.query,
+      surveySchema['surveysGet']
+    );
     if (!!error) {
       throw new validError(error.details[0].message);
     } else {
@@ -76,12 +41,72 @@ exports.getSurveys = async ctx => {
   }
 };
 
+exports.saveSurvey = async ctx => {
+  try {
+    const { error } = validation(ctx.request.body, surveySchema['surveySave']);
+
+    if (!!error) {
+      throw new validError(error.details[0].message);
+    } else {
+      await saveSurvey(ctx.request.body);
+      ctx.status = httpStatusCodes.CREATED;
+      ctx.body = {
+        message: 'survey has been saved'
+      };
+    }
+  } catch (error) {
+    ctx.app.emit('error', error, ctx);
+  }
+};
+
+exports.deleteSurvey = async ctx => {
+  try {
+    const { error } = validation(ctx.request.query, surveySchema['idSurvey']);
+    if (!!error) {
+      throw new validError(error.details[0].message);
+    } else {
+      const { id } = ctx.request.query;
+      await deleteSurvey(id);
+      await deleteSurveyResults(id);
+      ctx.status = httpStatusCodes.OK;
+      ctx.body = {
+        message: 'survey delete successful'
+      };
+    }
+  } catch (error) {
+    ctx.app.emit('error', error, ctx);
+  }
+};
+
+exports.saveSurveyResult = async ctx => {
+  try {
+    const { error } = validation(
+      ctx.request.body,
+      surveySchema['saveSurveyResult']
+    );
+
+    if (!!error) {
+      throw new validError(error.details[0].message);
+    } else {
+      saveSurveyResult(ctx.request.body);
+      ctx.status = httpStatusCodes.CREATED;
+      ctx.body = {
+        message: 'result save successful'
+      };
+    }
+  } catch (error) {
+    ctx.app.emit('error', error, ctx);
+  }
+};
+
 exports.getSurveyById = async ctx => {
   try {
-    const { id } = ctx.request.query;
-    if (!id) {
-      throw new validError('id is required');
+    const { error } = validation(ctx.request.query, surveySchema['idSurvey']);
+
+    if (!!error) {
+      throw new validError(error.details[0].message);
     } else {
+      const { id } = ctx.request.query;
       const survey = await getSurveyById(id);
       ctx.body = {
         survey: survey
@@ -94,13 +119,15 @@ exports.getSurveyById = async ctx => {
 
 exports.getSurveyResults = async ctx => {
   try {
-    const { surveyId } = ctx.request.query;
-    if (!surveyId) {
-      throw new validError('surveyId is required');
+    const { error } = validation(ctx.request.query, surveySchema['idSurvey']);
+
+    if (!!error) {
+      throw new validError(error.details[0].message);
     } else {
-      const results = await getSurveyResults(surveyId);
+      const { id } = ctx.request.query;
+      const results = await getSurveyResults(id);
       ctx.body = {
-        results: results
+        results
       };
       ctx.status = httpStatusCodes.OK;
     }

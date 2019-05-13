@@ -1,17 +1,15 @@
 const httpStatusCodes = require('http-status-codes');
 const { addUser } = require('../services/user');
 const { authUser } = require('../services/user');
-const {
-  validation,
-  validationSchemaUser,
-  validationSchemaAuthUser
-} = require('../helpers/validation');
-
+const { validation, userSchema } = require('../helpers/validation');
 const validError = require('../ER/errors/ValidError');
 
 exports.addUser = async ctx => {
   try {
-    const { error, value } = validation(ctx.request.body, validationSchemaUser);
+    const { error, value } = validation(
+      ctx.request.body,
+      userSchema['addUser']
+    );
     if (!!error) {
       throw new validError(error.details[0].message);
     } else {
@@ -36,7 +34,7 @@ exports.authUser = async ctx => {
   try {
     const { error, value } = validation(
       ctx.request.body,
-      validationSchemaAuthUser
+      userSchema['authUser']
     );
     if (!!error) {
       throw new validError(error.details[0].message);

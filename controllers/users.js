@@ -6,91 +6,103 @@ const {
   deleteUser,
   changeUserRole
 } = require('../services/users');
+const { validation, adminSchema } = require('../helpers/validation');
+const validError = require('../ER/errors/ValidError');
 
 exports.getUsersData = async ctx => {
   try {
-    const { limit, currentPage, sort } = ctx.request.query;
-    if (!!limit && !!currentPage && !!sort) {
+    const { error, value } = validation(
+      ctx.request.query,
+      adminSchema['getUsersData']
+    );
+
+    if (!!error) {
+      throw new validError(error.details[0].message);
+    } else {
+      const { limit, currentPage, sort } = value;
       const result = await getUsersData(limit, currentPage, sort);
       ctx.body = {
         ...result
       };
       ctx.status = httpStatusCodes.OK;
-    } else {
-      console.log(error);
-      ctx.body = error;
-      ctx.status = httpStatusCodes.BAD_REQUEST;
     }
   } catch (error) {
-    console.log(error);
-    ctx.status = httpStatusCodes.BAD_REQUEST;
+    ctx.app.emit('error', error, ctx);
   }
 };
 
 exports.changeUserName = async ctx => {
   try {
-    const { id, newName } = ctx.request.body;
-    if (!!id && !!newName) {
+    const { error, value } = validation(
+      ctx.request.body,
+      adminSchema['changeUserName']
+    );
+
+    if (!!error) {
+      throw new validError(error.details[0].message);
+    } else {
+      const { id, newName } = value;
       await changeUserName(id, newName);
       ctx.status = httpStatusCodes.OK;
-    } else {
-      console.log(error);
-      ctx.body = error;
-      ctx.status = httpStatusCodes.BAD_REQUEST;
     }
   } catch (error) {
-    console.log(error);
-    ctx.status = httpStatusCodes.BAD_REQUEST;
+    ctx.app.emit('error', error, ctx);
   }
 };
 
 exports.changeUserEmail = async ctx => {
   try {
-    const { id, newEmail } = ctx.request.body;
-    if (!!id && !!newEmail) {
+    const { error, value } = validation(
+      ctx.request.body,
+      adminSchema['changeUserEmail']
+    );
+
+    if (!!error) {
+      throw new validError(error.details[0].message);
+    } else {
+      const { id, newEmail } = value;
       await changeUserEmail(id, newEmail);
       ctx.status = httpStatusCodes.OK;
-    } else {
-      console.log(error);
-      ctx.body = error;
-      ctx.status = httpStatusCodes.BAD_REQUEST;
     }
   } catch (error) {
-    console.log(error);
-    ctx.status = httpStatusCodes.BAD_REQUEST;
+    ctx.app.emit('error', error, ctx);
   }
 };
 
 exports.deleteUser = async ctx => {
   try {
-    const { id } = ctx.request.body;
-    if (!!id) {
+    const { error, value } = validation(
+      ctx.request.body,
+      adminSchema['userId']
+    );
+
+    if (!!error) {
+      throw new validError(error.details[0].message);
+    } else {
+      const { id } = value;
       await deleteUser(id);
       ctx.status = httpStatusCodes.OK;
-    } else {
-      console.log(error);
-      ctx.body = error;
-      ctx.status = httpStatusCodes.BAD_REQUEST;
     }
   } catch (error) {
-    console.log(error);
-    ctx.status = httpStatusCodes.BAD_REQUEST;
+    ctx.app.emit('error', error, ctx);
   }
 };
 
 exports.changeUserRole = async ctx => {
   try {
-    const { newRole, userId } = ctx.request.body;
-    if (!!newRole && !!userId) {
+    const { error, value } = validation(
+      ctx.request.body,
+      adminSchema['changeUserRole']
+    );
+
+    if (!!error) {
+      throw new validError(error.details[0].message);
+    } else {
+      const { newRole, userId } = value;
       await changeUserRole(newRole, userId);
       ctx.status = httpStatusCodes.OK;
-    } else {
-      console.log(error);
-      ctx.body = error;
-      ctx.status = httpStatusCodes.BAD_REQUEST;
     }
   } catch (error) {
-    console.log(error);
-    ctx.status = httpStatusCodes.BAD_REQUEST;
+    ctx.app.emit('error', error, ctx);
   }
 };
