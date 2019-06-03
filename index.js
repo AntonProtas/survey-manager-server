@@ -14,7 +14,6 @@ const {
   getSurveyResults,
   deleteSurvey
 } = require('./controllers/survey');
-const { uploadDataJson, uploadDataDocx } = require('./controllers/dataUpload');
 const { handleApiError } = require('./ER/errorHandler');
 const { checkAuth } = require('./middleware/checkAuth');
 const { checkAdmin } = require('./middleware/checkAdmin');
@@ -41,8 +40,6 @@ router.post('/change-user-name', checkAdmin, changeUserName);
 router.post('/change-user-email', checkAdmin, changeUserEmail);
 router.post('/delete-user', checkAdmin, deleteUser);
 router.post('/change-user-role', checkAdmin, changeUserRole);
-router.get('/get-data-json', uploadDataJson);
-router.get('/get-data-docx', uploadDataDocx);
 
 mongoose.set('debug', true);
 mongoose.Promise = global.Promise;
