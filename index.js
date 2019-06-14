@@ -1,4 +1,4 @@
-const { addUser, authUser } = require('./controllers/user');
+const { addUser, authUser, setProfileImage } = require('./controllers/user');
 const {
   getUsersData,
   changeUserName,
@@ -19,6 +19,7 @@ const { checkAuth } = require('./middleware/checkAuth');
 const { checkAdmin } = require('./middleware/checkAdmin');
 const Koa = require('koa');
 const Router = require('koa-router');
+const koaBody = require('koa-body');
 const logger = require('koa-logger');
 const mongoose = require('mongoose');
 const bodyParser = require('koa-bodyparser');
@@ -41,6 +42,8 @@ router.post('/change-user-email', checkAdmin, changeUserEmail);
 router.post('/delete-user', checkAdmin, deleteUser);
 router.post('/change-user-role', checkAdmin, changeUserRole);
 
+router.post('/set-profile-image', setProfileImage);
+
 mongoose.set('debug', true);
 mongoose.Promise = global.Promise;
 mongoose
@@ -51,7 +54,7 @@ mongoose
   });
 
 app.use(logger());
-app.use(bodyParser());
+app.use(koaBody({ multipart: true }));
 app.use(cors());
 app.use(router.routes());
 app.on('error', handleApiError);

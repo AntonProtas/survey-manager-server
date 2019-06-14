@@ -3,6 +3,43 @@ const { getUser } = require('../repositories/user');
 const jwt = require('jsonwebtoken');
 const NotFoundError = require('../ER/errors/NotFoundError');
 const NotMatchError = require('../ER/errors/NotMatchError');
+const aws = require('aws-sdk');
+const fs = require('fs');
+
+exports.uploadFile = async ({ fileName, filePath, fileType }) => {
+  return new Promise((resolve, reject) => {
+    aws.config.update({
+      region: 'us-east-2',
+      accessKeyId: process.env.AWS_ACCESS_KEY,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    });
+
+    const s3 = new aws.S3({
+      apiVersion: '2012-10-17'
+    });
+
+    const stream = fs.createReadStream(filePath);
+
+    stream.on('error', err => reject(err));
+
+    s3.upload(
+      {
+        ACL: 'public-read',
+        Bucket: 'images-storage-sm',
+        Body: stream,
+        Key: fileName,
+        ContentType: fileType
+      },
+      (err, data) => {
+        if (!!err) {
+          reject(err);
+        } else if (data) {
+          resolve({ key: data.Key, url: data.Location });
+        }
+      }
+    );
+  });
+};
 
 exports.addUser = async data => {
   try {
@@ -31,7 +68,12 @@ exports.authUser = async data => {
     if (!!user && passwordIsMatch) {
       return {
         token: jwt.sign(
-          { id: user._id, username: user.username, role: user.role.role },
+          {
+            id: user._id,
+            username: user.username,
+            role: user.role.role,
+            email: email
+          },
           process.env.SECRET
         ),
         username: user.username,

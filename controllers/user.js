@@ -1,8 +1,9 @@
 const httpStatusCodes = require('http-status-codes');
-const { addUser } = require('../services/user');
-const { authUser } = require('../services/user');
+const { addUser, authUser, uploadFile } = require('../services/user');
 const { validation, userSchema } = require('../helpers/validation');
 const validError = require('../ER/errors/ValidError');
+const sharp = require('sharp');
+const fs = require('fs');
 
 exports.addUser = async ctx => {
   try {
@@ -48,7 +49,6 @@ exports.authUser = async ctx => {
           message: 'Login successful',
           token: dataUser.token,
           username: dataUser.username,
-          email: dataUser.email,
           id: dataUser.id
         };
         ctx.status = httpStatusCodes.OK;
@@ -57,4 +57,19 @@ exports.authUser = async ctx => {
   } catch (error) {
     ctx.app.emit('error', error, ctx);
   }
+};
+
+exports.setProfileImage = async ctx => {
+  const file = ctx.request.files.image;
+  const imgagePath = 'output-image-profile.jpg';
+  await sharp(file.path)
+    .resize(400, 400)
+    .toFile(imgagePath);
+  const { key, url } = await uploadFile({
+    fileName: file.name,
+    filePath: imgagePath,
+    fileType: file.type
+  });
+  await fs.unlinkSync(imgagePath);
+  ctx.body = { key, url };
 };
