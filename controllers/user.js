@@ -1,12 +1,19 @@
 const httpStatusCodes = require('http-status-codes');
-const { addUser, authUser, uploadFile } = require('../services/user');
+const {
+  addUser,
+  authUser,
+  uploadFile,
+  updateProfileImageUrl
+} = require('../services/user');
 const { validation, userSchema } = require('../helpers/validation');
 const validError = require('../ER/errors/ValidError');
 const sharp = require('sharp');
 const fs = require('fs');
+const shortid = require('shortid');
 
 exports.addUser = async ctx => {
   try {
+    console.log(ctx.request.body);
     const { error, value } = validation(
       ctx.request.body,
       userSchema['addUser']
@@ -18,7 +25,8 @@ exports.addUser = async ctx => {
         username: value.username,
         email: value.email.toLowerCase(),
         password: value.password,
-        role: value.role
+        role: value.role,
+        profileImage: value.profileImage
       });
       ctx.status = httpStatusCodes.CREATED;
       ctx.body = {
@@ -45,11 +53,10 @@ exports.authUser = async ctx => {
         password: value.password
       });
       if (!!dataUser) {
+        console.log(dataUser);
         ctx.body = {
           message: 'Login successful',
-          token: dataUser.token,
-          username: dataUser.username,
-          id: dataUser.id
+          token: dataUser.token
         };
         ctx.status = httpStatusCodes.OK;
       }
@@ -60,16 +67,36 @@ exports.authUser = async ctx => {
 };
 
 exports.setProfileImage = async ctx => {
-  const file = ctx.request.files.image;
-  const imgagePath = 'output-image-profile.jpg';
-  await sharp(file.path)
-    .resize(400, 400)
-    .toFile(imgagePath);
-  const { key, url } = await uploadFile({
-    fileName: file.name,
-    filePath: imgagePath,
-    fileType: file.type
-  });
-  await fs.unlinkSync(imgagePath);
-  ctx.body = { key, url };
+  try {
+    const userData = JSON.parse(ctx.request.body.userData);
+    const image = ctx.request.files.image;
+    const imgagePath = 'output-image-profile.jpg';
+    console.log(userData);
+    await sharp(image.path)
+      .extract({
+        left: userData.left,
+        top: userData.top,
+        width: userData.width,
+        height: userData.height
+      })
+      .toFile(imgagePath);
+    const { key, url } = await uploadFile({
+      fileName: `${userData.id}${shortid.generate()}`,
+      filePath: imgagePath,
+      fileType: image.type
+    });
+    await fs.unlinkSync(imgagePath);
+    if (!!key && !!url) {
+      console.log(key, url);
+      const result = await updateProfileImageUrl(userData.id, url);
+      if (!!result) {
+        ctx.body = {
+          message: 'Update successful',
+          url: url
+        };
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };

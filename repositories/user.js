@@ -16,3 +16,7 @@ exports.saveUser = async userData => {
 exports.getUser = async email => {
   return await User.findOne({ email }).populate('role');
 };
+
+exports.updateProfileImageUrl = async (userId, imageUrl) => {
+  return await User.findByIdAndUpdate(userId, { profileImage: imageUrl });
+};

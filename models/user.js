@@ -21,6 +21,10 @@ const UserSchema = new mongoose.Schema(
     registrationDate: {
       required: true,
       type: String
+    },
+    profileImage: {
+      required: true,
+      type: String
     }
   },
   { versionKey: false }

@@ -1,10 +1,21 @@
-const { saveUser } = require('../repositories/user');
-const { getUser } = require('../repositories/user');
+const {
+  saveUser,
+  updateProfileImageUrl,
+  getUser
+} = require('../repositories/user');
 const jwt = require('jsonwebtoken');
 const NotFoundError = require('../ER/errors/NotFoundError');
 const NotMatchError = require('../ER/errors/NotMatchError');
 const aws = require('aws-sdk');
 const fs = require('fs');
+
+exports.updateProfileImageUrl = async (userId, imageUrl) => {
+  try {
+    return updateProfileImageUrl(userId, imageUrl);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 exports.uploadFile = async ({ fileName, filePath, fileType }) => {
   return new Promise((resolve, reject) => {
@@ -58,6 +69,7 @@ exports.authUser = async data => {
   try {
     const { password, email } = data;
     const user = await getUser(email);
+    console.log(user);
     if (!user) {
       throw new NotFoundError('user');
     }
@@ -72,13 +84,11 @@ exports.authUser = async data => {
             id: user._id,
             username: user.username,
             role: user.role.role,
-            email: email
+            email: email,
+            profileImage: user.profileImage
           },
           process.env.SECRET
-        ),
-        username: user.username,
-        email: user.email,
-        id: user._id
+        )
       };
     } else {
       return false;

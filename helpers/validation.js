@@ -67,6 +67,7 @@ exports.userSchema = {
       .trim()
       .required(),
     role: Joi.string().required(),
+    profileImage: Joi.string().required(),
     registrationDate: Joi.string()
   },
   authUser: {
