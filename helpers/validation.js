@@ -53,7 +53,7 @@ exports.adminSchema = {
 
 exports.userSchema = {
   addUser: {
-    username: Joi.string()
+    fullName: Joi.string()
       .trim()
       .min(2)
       .required(),
@@ -62,13 +62,11 @@ exports.userSchema = {
       .required(),
     password: Joi.string()
       .min(6)
-      .regex(/^(?=(.*\d){2,})/)
+      .regex(/^(?=(.*\d){1,})/)
       .regex(/^(?=.*[A-Z]{1,})/)
       .trim()
       .required(),
-    role: Joi.string().required(),
-    profileImage: Joi.string().required(),
-    registrationDate: Joi.string()
+    role: Joi.string().required()
   },
   authUser: {
     email: Joi.string()

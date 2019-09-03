@@ -25,7 +25,6 @@
     "koa2-cors": "^2.0.6",
     "mongoose": "^5.0.11",
     "mongoose-paginate": "^5.0.3",
-    "read-blob": "^1.1.0",
     "sharp": "^0.22.1",
     "shortid": "^2.2.14",
     "uuid": "^3.3.2"

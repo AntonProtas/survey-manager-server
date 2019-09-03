@@ -22,7 +22,6 @@ const Router = require('koa-router');
 const koaBody = require('koa-body');
 const logger = require('koa-logger');
 const mongoose = require('mongoose');
-const bodyParser = require('koa-bodyparser');
 const cors = require('koa2-cors');
 const router = new Router();
 const app = new Koa();
@@ -41,7 +40,6 @@ router.post('/change-user-name', checkAdmin, changeUserName);
 router.post('/change-user-email', checkAdmin, changeUserEmail);
 router.post('/delete-user', checkAdmin, deleteUser);
 router.post('/change-user-role', checkAdmin, changeUserRole);
-
 router.post('/set-profile-image', setProfileImage);
 
 mongoose.set('debug', true);

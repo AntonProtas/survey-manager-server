@@ -22,15 +22,14 @@ exports.addUser = async ctx => {
       throw new validError(error.details[0].message);
     } else {
       await addUser({
-        username: value.username,
+        fullName: value.fullName,
         email: value.email.toLowerCase(),
         password: value.password,
-        role: value.role,
-        profileImage: value.profileImage
+        role: value.role
       });
       ctx.status = httpStatusCodes.CREATED;
       ctx.body = {
-        username: value.username,
+        fullName: value.fullName,
         email: value.email.toLowerCase()
       };
     }

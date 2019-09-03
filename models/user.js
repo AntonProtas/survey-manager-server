@@ -4,7 +4,7 @@ const mongoosePaginate = require('mongoose-paginate');
 
 const UserSchema = new mongoose.Schema(
   {
-    username: {
+    fullName: {
       required: true,
       type: String
     },
@@ -20,11 +20,7 @@ const UserSchema = new mongoose.Schema(
     role: { type: mongoose.Schema.Types.ObjectId, ref: 'Role', required: true },
     registrationDate: {
       required: true,
-      type: String
-    },
-    profileImage: {
-      required: true,
-      type: String
+      type: Date
     }
   },
   { versionKey: false }
