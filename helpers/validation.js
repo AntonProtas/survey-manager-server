@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 exports.surveySchema = {
   surveysGet: {
@@ -53,7 +53,7 @@ exports.adminSchema = {
 
 exports.userSchema = {
   addUser: {
-    fullName: Joi.string()
+    username: Joi.string()
       .trim()
       .min(2)
       .required(),

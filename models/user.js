@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const mongoosePaginate = require('mongoose-paginate');
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const mongoosePaginate = require("mongoose-paginate");
 
 const UserSchema = new mongoose.Schema(
   {
-    fullName: {
+    username: {
       required: true,
       type: String
     },
@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema(
       required: true,
       type: String
     },
-    role: { type: mongoose.Schema.Types.ObjectId, ref: 'Role', required: true },
+    role: { type: mongoose.Schema.Types.ObjectId, ref: "Role", required: true },
     registrationDate: {
       required: true,
       type: Date
@@ -26,7 +26,7 @@ const UserSchema = new mongoose.Schema(
   { versionKey: false }
 );
 
-UserSchema.pre('save', async function(next) {
+UserSchema.pre("save", async function(next) {
   const user = this;
   try {
     const salt = await bcrypt.genSalt(10);
@@ -47,4 +47,4 @@ UserSchema.methods.comparePasswords = async function(candidatePassword) {
 };
 UserSchema.plugin(mongoosePaginate);
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model("User", UserSchema);
